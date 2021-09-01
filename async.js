@@ -2,7 +2,7 @@
 // ensures that the function returns a promise, and wraps non-promises in it
 
 async function fn() {
-  return 1;
+  return 'basic async example';
 }
 fn().then(alert);
 
@@ -53,15 +53,12 @@ f().catch(alert)
 
 
 // When we need to wait for multiple promises, we can wrap them in Promise.all and then await
-
 async function test() {
-  let results = await Promise.all([
+  let requests = await Promise.all([
     fetch('https://api.github.com/users/sofanisba'),
-    fetch('https://api.icndb.com/jokes/random/?escape=javascript'),
+    fetch('https://api.github.com/users/moneil868'),
   ]);
-  console.log(results)
-
-  const content = await Promise.all(results.map((r) => r.json()))
-  console.log(content)
+  const users = await Promise.all(requests.map(r => r.json()))
+  users.forEach((user) => alert(user.name));
 }
 test();

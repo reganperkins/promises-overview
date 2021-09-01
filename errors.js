@@ -32,12 +32,24 @@ fetch('https://api.github.com/users/janwng')
     alert('Next handler still runs');
   })
 
+
+// throwing and reject() do the same thing in the executor fn and handlers (then, finally, catch)
+// it is better to always reject or throw with a new Error() for consistency and better error logging
+
 // will this trigger the catch?
 // no because the catch block can handle synchronous errors but the error
 // is not created when the executor is running
-new Promise(function(resolve, reject) {
+
+new Promise(function() {
   setTimeout(() => {
     throw new Error("Whoops!");
+  }, 1000);
+}).catch(alert);
+// setTimeout() has it's own async callback. Exceptions in that
+// callback only go back into the timer event system
+new Promise(function(resolve, reject) {
+  setTimeout(() => {
+    reject(new Error("Whoops!"));
   }, 1000);
 }).catch(alert);
 
@@ -61,25 +73,3 @@ new Promise(function(resolve, reject) {
 //     alert(jokeObj.value.joke);
 //     return jokeObj
 //   })
-
-
-// throwing and reject() do the same thing in the executor fn and handlers (then, finally, catch)
-// it is better to always reject or throw with a new Error() for consistency and better error logging
-
-
-// error handling flow-through
-fetch('https://api.icndb.com/jokes/random/?escape=javascript')
-  .then((fetchPromise) => fetchPromise.json())
-  .then((jokeObj) => {
-    alert(jokeObj.value.joke);
-    return jokeObj;
-  })
-  .then((jokeObj) => {
-    throw new Error(`Sorry, the joke "${jokeObj.value.joke}" is not funny`);
-  })
-  .catch((err)=>  {
-    alert(err.message)
-  })
-  .then((mysteryBox) => {
-    alert(mysteryBox)
-  });

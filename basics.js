@@ -17,17 +17,3 @@ fetch('https://api.icndb.com/jokes/random/?escape=javascript')
     // this makes it easier to chain other actions on later if needed
     return jokeObj;
   });
-
-// error handling with catch
-fetch('https://api.icndb.com/jokes/random/?escape=javascript')
-  .then((fetchPromise) => fetchPromise.json())
-  .then((jokeObj) => {
-    alert(jokeObj.value.joke);
-    return jokeObj;
-  })
-  .then((jokeObj) => {
-    throw new Error(`Sorry, the joke "${jokeObj.value.joke}" is not funny`);
-  })
-  .catch((err)=>  {
-    alert(err.message)
-  });
